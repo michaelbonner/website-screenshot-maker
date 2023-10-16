@@ -110,10 +110,7 @@ const takeScreenshot = async (
   });
   const page = await context.newPage();
   await page.goto(url);
-  await page.waitForLoadState("networkidle", {
-    // wait at most 3 seconds
-    timeout: 3000,
-  });
+  await page.waitForLoadState("domcontentloaded");
   await page.screenshot({
     path: `screenshots/${pagePath}/${resolution.label} (${browser.label}).png`,
     fullPage: true,
