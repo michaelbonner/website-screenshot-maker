@@ -1,5 +1,16 @@
 import { chromium, firefox, webkit } from "playwright";
 import { existsSync, mkdirSync } from "fs";
+import cliProgress from "cli-progress";
+
+// create a new progress bar instance and use shades_classic theme
+const progressBar = new cliProgress.SingleBar(
+  {
+    barCompleteChar: "\u2588",
+    barIncompleteChar: "\u2591",
+    hideCursor: true,
+  },
+  cliProgress.Presets.shades_classic
+);
 
 // take screenshots at these resolutions
 const resolutions = [
@@ -41,6 +52,11 @@ const browsers = [
   },
 ];
 
+let currentProgress = 0;
+
+// start the progress bar with a total value of 200 and start value of 0
+progressBar.start(resolutions * urls * browsers, 0);
+
 (async () => {
   for (const browser of browsers) {
     const launchedBrowser = await browser.browser.launch();
@@ -67,9 +83,16 @@ const browsers = [
           browser.label,
           pagePath
         );
+
+        // update the current value in your application..
+        currentProgress = currentProgress + 1;
+        progressBar.update(currentProgress);
       }
     }
   }
+
+  // stop the progress bar
+  progressBar.stop();
 })();
 
 const takeScreenshot = async (
@@ -88,8 +111,8 @@ const takeScreenshot = async (
   const page = await context.newPage();
   await page.goto(url);
   await page.waitForLoadState("networkidle", {
-    // wait at most 10 seconds
-    timeout: 10000,
+    // wait at most 3 seconds
+    timeout: 3000,
   });
   await page.screenshot({
     path: `screenshots/${pagePath}/${resolution.label} (${browser.label}).png`,
