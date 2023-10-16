@@ -4,11 +4,7 @@ import cliProgress from "cli-progress";
 
 // create a new progress bar instance and use shades_classic theme
 const progressBar = new cliProgress.SingleBar(
-  {
-    barCompleteChar: "\u2588",
-    barIncompleteChar: "\u2591",
-    hideCursor: true,
-  },
+  {},
   cliProgress.Presets.shades_classic
 );
 
@@ -52,13 +48,13 @@ const browsers = [
   },
 ];
 
-let currentProgress = 0;
-
-// start the progress bar with a total value of 200 and start value of 0
-progressBar.start(resolutions * urls * browsers, 0);
-
 (async () => {
   for (const browser of browsers) {
+    let currentProgress = 0;
+    console.log(`\n\nLoading with ${browser.label}`);
+
+    // start the progress bar
+    progressBar.start(resolutions.length * urls.length, 0);
     const launchedBrowser = await browser.browser.launch();
 
     for (const url of urls) {
@@ -89,17 +85,18 @@ progressBar.start(resolutions * urls * browsers, 0);
         progressBar.update(currentProgress);
       }
     }
+    progressBar.stop();
   }
 
   // stop the progress bar
-  progressBar.stop();
+  process.exit();
 })();
 
 const takeScreenshot = async (
   launchedBrowser,
   url,
   resolution,
-  browser,
+  browserLabel,
   pagePath
 ) => {
   const context = await launchedBrowser.newContext({
@@ -110,9 +107,12 @@ const takeScreenshot = async (
   });
   const page = await context.newPage();
   await page.goto(url);
-  await page.waitForLoadState("domcontentloaded");
+  await page.waitForFunction(() => {
+    const images = Array.from(document.querySelectorAll("img"));
+    return images.every((img) => img.complete);
+  });
   await page.screenshot({
-    path: `screenshots/${pagePath}/${resolution.label} (${browser.label}).png`,
+    path: `screenshots/${pagePath}/${resolution.label} (${browserLabel}).png`,
     fullPage: true,
   });
   await context.close();
