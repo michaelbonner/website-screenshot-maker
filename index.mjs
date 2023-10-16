@@ -22,54 +22,74 @@ const urls = [
   "https://www.hanksgaragevenue.com/contact",
 ];
 
+const browsers = [
+  {
+    label: "chrome",
+    browser: chromium,
+  },
+  {
+    label: "firefox",
+    browser: firefox,
+  },
+  {
+    label: "safari",
+    browser: webkit,
+  },
+];
+
 (async () => {
-  const browsers = [
-    {
-      label: "chrome",
-      browser: chromium,
-    },
-    {
-      label: "firefox",
-      browser: firefox,
-    },
-    {
-      label: "safari",
-      browser: webkit,
-    },
-  ];
+  for (const browser of browsers) {
+    const launchedBrowser = await browser.browser.launch();
 
-  for (const url of urls) {
-    let pagePath = url.split("/").pop();
-    if (pagePath === "") {
-      pagePath = "home";
-    }
+    for (const url of urls) {
+      // get page path
+      let pagePath = url.split("/").pop();
+      if (pagePath === "") {
+        pagePath = "home";
+      }
 
-    const pageFolder = `screenshots/${pagePath}`;
-    if (!existsSync(pageFolder)) {
-      mkdirSync(pageFolder);
-    }
+      // create folder if it doesn't exist
+      const pageFolder = `screenshots/${pagePath}`;
+      if (!existsSync(pageFolder)) {
+        mkdirSync(pageFolder);
+      }
 
-    for (const resolution of resolutions) {
-      for (const browser of browsers) {
-        const launchedBrowser = await browser.browser.launch();
-        const context = await launchedBrowser.newContext({
-          viewport: {
-            width: resolution.width,
-            height: resolution.height,
-          },
-        });
-        const page = await context.newPage();
-        await page.goto(url);
-        await page.waitForLoadState("networkidle", {
-          // wait at most 10 seconds
-          timeout: 10000,
-        });
-        await page.screenshot({
-          path: `screenshots/${pagePath}/${resolution.label} (${browser.label}).png`,
-          fullPage: true,
-        });
-        await context.close();
+      // take screenshots
+      for (const resolution of resolutions) {
+        await takeScreenshot(
+          launchedBrowser,
+          url,
+          resolution,
+          browser.label,
+          pagePath
+        );
       }
     }
   }
 })();
+
+const takeScreenshot = async (
+  launchedBrowser,
+  url,
+  resolution,
+  browser,
+  pagePath
+) => {
+  const context = await launchedBrowser.newContext({
+    viewport: {
+      width: resolution.width,
+      height: resolution.height,
+    },
+  });
+  const page = await context.newPage();
+  await page.goto(url);
+  await page.waitForLoadState("networkidle", {
+    // wait at most 10 seconds
+    timeout: 10000,
+  });
+  await page.screenshot({
+    path: `screenshots/${pagePath}/${resolution.label} (${browser.label}).png`,
+    fullPage: true,
+  });
+  await context.close();
+};
