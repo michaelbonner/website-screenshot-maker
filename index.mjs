@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { chromium, firefox, webkit } from "playwright";
 import { existsSync, mkdirSync } from "fs";
 
 const resolutions = [
@@ -23,6 +23,21 @@ const urls = [
 ];
 
 (async () => {
+  const browsers = [
+    {
+      label: "chrome",
+      browser: chromium,
+    },
+    {
+      label: "firefox",
+      browser: firefox,
+    },
+    {
+      label: "safari",
+      browser: webkit,
+    },
+  ];
+
   for (const url of urls) {
     let pagePath = url.split("/").pop();
     if (pagePath === "") {
@@ -35,24 +50,26 @@ const urls = [
     }
 
     for (const resolution of resolutions) {
-      const browser = await chromium.launch();
-      const context = await browser.newContext({
-        viewport: {
-          width: resolution.width,
-          height: resolution.height,
-        },
-      });
-      const page = await context.newPage();
-      await page.goto(url);
-      await page.waitForLoadState("networkidle", {
-        // wait at most 10 seconds
-        timeout: 10000,
-      });
-      await page.screenshot({
-        path: `screenshots/${pagePath}/${resolution.label}.png`,
-        fullPage: true,
-      });
-      await context.close();
+      for (const browser of browsers) {
+        const launchedBrowser = await browser.browser.launch();
+        const context = await launchedBrowser.newContext({
+          viewport: {
+            width: resolution.width,
+            height: resolution.height,
+          },
+        });
+        const page = await context.newPage();
+        await page.goto(url);
+        await page.waitForLoadState("networkidle", {
+          // wait at most 10 seconds
+          timeout: 10000,
+        });
+        await page.screenshot({
+          path: `screenshots/${pagePath}/${resolution.label} (${browser.label}).png`,
+          fullPage: true,
+        });
+        await context.close();
+      }
     }
   }
 })();
