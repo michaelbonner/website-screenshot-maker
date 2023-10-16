@@ -1,2 +1,3 @@
-# website-screenshot-maker
-Helps make full size screenshots for an entire website at different resolutions
+# Website Screenshot Maker
+
+It helps make full-size screenshots for an entire website at different resolutions
