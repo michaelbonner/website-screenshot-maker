@@ -1,6 +1,7 @@
 import { chromium, firefox, webkit } from "playwright";
 import { existsSync, mkdirSync } from "fs";
 
+// take screenshots at these resolutions
 const resolutions = [
   { width: 3200, height: 1800, label: "Desktop large" },
   { width: 2560, height: 1440, label: "Desktop default" },
@@ -14,6 +15,7 @@ const resolutions = [
   { width: 428, height: 926, label: "Phone large" },
 ];
 
+// take screenshots of these pages
 const urls = [
   "https://www.hanksgaragevenue.com/",
   "https://www.hanksgaragevenue.com/tour",
@@ -22,6 +24,8 @@ const urls = [
   "https://www.hanksgaragevenue.com/contact",
 ];
 
+// take screenshots in these browsers
+// you can remove any of these if you don't need them
 const browsers = [
   {
     label: "chrome",
