@@ -25,10 +25,10 @@ const resolutions = [
 // take screenshots of these pages
 const urls = [
   "https://www.hanksgaragevenue.com/",
-  "https://www.hanksgaragevenue.com/tour",
-  "https://www.hanksgaragevenue.com/about",
-  "https://www.hanksgaragevenue.com/events",
   "https://www.hanksgaragevenue.com/contact",
+  "https://www.hanksgaragevenue.com/events",
+  "https://www.hanksgaragevenue.com/garage-specs",
+  "https://www.hanksgaragevenue.com/tour",
 ];
 
 // take screenshots in these browsers
