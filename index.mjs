@@ -112,7 +112,7 @@ const takeScreenshot = async (
     return images.every((img) => img.complete);
   });
   await page.screenshot({
-    path: `screenshots/${pagePath}/${resolution.label} (${browserLabel}).png`,
+    path: `screenshots/${pagePath}/${resolution.label} (${browserLabel}).jpg`,
     fullPage: true,
   });
   await context.close();
