@@ -24,11 +24,17 @@ const resolutions = [
 
 // take screenshots of these pages
 const urls = [
-  "https://www.hanksgaragevenue.com/",
-  "https://www.hanksgaragevenue.com/contact",
-  "https://www.hanksgaragevenue.com/events",
-  "https://www.hanksgaragevenue.com/garage-specs",
-  "https://www.hanksgaragevenue.com/tour",
+  "https://nef.bootpack.dev/",
+  "https://nef.bootpack.dev/think-energy/",
+  "https://nef.bootpack.dev/energy-safe-kids/",
+  "https://nef.bootpack.dev/rev/",
+  "https://nef.bootpack.dev/board-of-directors/",
+  "https://nef.bootpack.dev/careers/",
+  "https://nef.bootpack.dev/meet-the-team/",
+  "https://nef.bootpack.dev/teacher-support/",
+  "https://nef.bootpack.dev/survey/",
+  "https://nef.bootpack.dev/communications/",
+  "https://nef.bootpack.dev/contact/",
 ];
 
 // take screenshots in these browsers
