@@ -8,6 +8,10 @@ const progressBar = new cliProgress.SingleBar(
   cliProgress.Presets.shades_classic
 );
 
+if (!process.env.PARSE_PATHS) {
+  throw new Error("Please provide PARSE_PATHS environment variables");
+}
+
 // take screenshots at these resolutions
 const resolutions = [
   { width: 3200, height: 1800, label: "Desktop large" },
@@ -22,20 +26,8 @@ const resolutions = [
   { width: 428, height: 926, label: "Phone large" },
 ];
 
-// take screenshots of these pages
-const urls = [
-  "https://nef.bootpack.dev/",
-  "https://nef.bootpack.dev/think-energy/",
-  "https://nef.bootpack.dev/energy-safe-kids/",
-  "https://nef.bootpack.dev/rev/",
-  "https://nef.bootpack.dev/board-of-directors/",
-  "https://nef.bootpack.dev/careers/",
-  "https://nef.bootpack.dev/meet-the-team/",
-  "https://nef.bootpack.dev/teacher-support/",
-  "https://nef.bootpack.dev/survey/",
-  "https://nef.bootpack.dev/communications/",
-  "https://nef.bootpack.dev/contact/",
-];
+const paths = process.env.PARSE_PATHS.split(",");
+const urls = paths.map((path) => `${process.env.PARSE_HOST}${path}`);
 
 // take screenshots in these browsers
 // you can remove any of these if you don't need them

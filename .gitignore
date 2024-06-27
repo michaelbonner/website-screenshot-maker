@@ -1,3 +1,7 @@
 screenshots/*
 !screenshots/.gitkeep
 node_modules
+
+.env
+.env.local
+.env.development
